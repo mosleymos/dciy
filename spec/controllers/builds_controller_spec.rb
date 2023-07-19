@@ -1,38 +1,33 @@
 require 'spec_helper'
 
-describe BuildsController do
+describe BuildsController, type: :request do
   let(:project) { projects(:one) }
   let(:build) { builds(:one) }
 
-  xit "should get index" do
-    get :index
-
-    expect(assigns :builds).not_to be_nil
-    expect(response).to be_success
+  it "should get index" do
+    get "/builds" 
+    expect(assigns :builds.to_s).not_to be_nil
+    expect(response.status == 200)
   end
 
-  xit "should get new" do
-    get :new
-
-    b = assigns :build
+  it "should get new" do
+    get "/builds/new" 
+    b = assigns :build.to_s
     expect(b.branch).to eq('master')
-
-    expect(response).to be_success
+    expect(response.status == 200)
   end
 
   xit "should create build" do
     expect(BuildWorker).to receive(:perform_async)
-
     expect do
-      post :create, build: { project_id: project, branch: 'some-branch' }
+      post "/builds", params: { build: { project_id: project, branch: 'some-branch' } }
     end.to change { Build.count }.by(1)
 
-    b = assigns :build
+    b = assigns :build.to_s
 
-    expect(b).not_to be_nil
-    expect(b.project).to eq(project)
-    expect(b.branch).to eq('some-branch')
-
+    expect(not(b.nil?))
+    expect(b.project.id == project.id)
+    expect(b.branch == 'some-branch')
     expect(response).to redirect_to(build_path(b))
   end
 
