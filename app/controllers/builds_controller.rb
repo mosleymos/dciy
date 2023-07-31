@@ -10,10 +10,10 @@ class BuildsController < ApplicationController
   # GET /builds.json
   def index
     if params[:project_id].present?
-      @project = Project.find(params[:project_id])
+      @project = Project.includes(:builds).find(params[:project_id])
       @builds = @project.builds
     else
-      @builds = Build.all
+      @builds = Build.includes(:project).all
     end
     @builds = @builds.order("created_at DESC")
   end
