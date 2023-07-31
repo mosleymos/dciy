@@ -27,7 +27,7 @@ class CommitStatus
       endpoint = "#{build.project.api_uri}/repos/#{build.project.repo}/statuses/#{build.sha}"
       repo_api = RestClient::Resource.new endpoint, ENV["GITHUB_API_USER"], ENV["GITHUB_API_TOKEN"]
 
-      response = repo_api.post commit_status.to_json, :content_type => :json, :accept => :json
+      #response = repo_api.post commit_status.to_json, :content_type => :json, :accept => :json
     end
 
   end
